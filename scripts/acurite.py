@@ -40,6 +40,8 @@ except:
 	print('MQTT client connect failure')
 	flag_connected = False
 
+now = time.time()
+report_window_sec = 5
 AR_WeatherStation_sample_ts = {
 	49: now,
 	56: now,
