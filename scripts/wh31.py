@@ -15,7 +15,7 @@ wind_speed_digits = 0
 # Hops every 25 seconds between 433.92 and 915 MHz for Acurite Weather Stations and Ambient Weather WH31
 #cmd = 'rtl_433 -F json -f 915000000'
 #cmd = 'rtl_433 -F json -f 915000000 -f 433920000 -H 25 -R 40 -R 113'
-cmd = 'rtl_433 -d 1 -F json 433920000'
+cmd = 'rtl_433 -d 1 -F json -f 433920000'
 print('Using rtl_433 command: ' + cmd)
 
 # MQTT Client
