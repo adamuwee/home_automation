@@ -182,13 +182,13 @@ def main():
     logging.basicConfig(level=logging.INFO, format="%(asctime)s:%(levelname)s:%(message)s")
     logger = logging.getLogger(__name__)
     # Debug File Log
-    file = logging.FileHandler("debug.log")
+    file = logging.FileHandler("debug_as_water_flow.log")
     file.setLevel(logging.INFO)
     fileformat = logging.Formatter("%(asctime)s:%(levelname)s:%(message)s")
     file.setFormatter(fileformat)
     logger.addHandler(file)
     # Critical File Log
-    cric_file = logging.FileHandler("critical.log")
+    cric_file = logging.FileHandler("critical_as_water_flow.log")
     cric_file.setLevel(logging.CRITICAL)
     cric_file.setFormatter(fileformat)
     logger.addHandler(cric_file)
