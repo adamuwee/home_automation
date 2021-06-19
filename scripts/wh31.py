@@ -3,6 +3,8 @@ import json
 from subprocess import Popen, PIPE
 import paho.mqtt.client as mqtt
 import time
+import logging
+import sys, traceback
 
 # App Constants
 openhab_host = "debian-openhab"
@@ -96,6 +98,16 @@ def Parse_AmbientWeatherWH31(dd):
 		# Update last report time
 		AW_WH31_sample_ts[dd["channel"]] = time.time()
 
+# Configure Logger
+logging.basicConfig(level=logging.INFO, format="%(asctime)s:%(levelname)s:%(message)s")
+logger = logging.getLogger(__name__)
+# Debug File Log
+file = logging.FileHandler("debug_wh31.log")
+file.setLevel(logging.INFO)
+fileformat = logging.Formatter("%(asctime)s:%(levelname)s:%(message)s")
+file.setFormatter(fileformat)
+logger.addHandler(file)
+
 # Process Open of rtl_433 SDR
 with Popen(cmd, shell=True, stdout=PIPE, bufsize=1, universal_newlines=True) as p:
 	try:
@@ -105,6 +117,7 @@ with Popen(cmd, shell=True, stdout=PIPE, bufsize=1, universal_newlines=True) as 
 				client.loop_stop()
 				client.connect(openhab_host, mqtt_broker_port)
 				client.loop_start()
+				logger.info(f'MQTT Client Connected: {client}')
 
 			# Convert json output to dictionary
 			data_dict = json.loads(line)
@@ -117,11 +130,12 @@ with Popen(cmd, shell=True, stdout=PIPE, bufsize=1, universal_newlines=True) as 
 				if data_dict[key] == 'AmbientWeather-WH31E':
 					Parse_AmbientWeatherWH31(data_dict)
 				else:
-					print('unknown model type parsed: ' + line)
+					logger.warn('unknown model type parsed: ' + line)
 
 	except KeyboardInterrupt:
-		print("User exit")
+		logger.warn("User exit")
 		p.terminate()
 
-print('Unexpected exit: ' + str(p))
+logger.error('Unexpected exit: ' + str(p))
+logger.error('Traceback: ' + traceback.print_exc())
 p.terminate()
