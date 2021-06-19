@@ -19,7 +19,7 @@ wind_speed_digits = 0
 #cmd = 'rtl_433 -F json -f 915000000 -f 433920000 -H 25 -R 40 -R 113'
 cmd = 'rtl_433 -d 0 -F json -f 433920000'
 
-print('Using rtL_433 command: ' + cmd)
+print('Using rtL_433 command : ' + cmd)
 
 # MQTT Client
 flag_connected = False
