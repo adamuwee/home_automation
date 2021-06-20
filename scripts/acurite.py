@@ -159,5 +159,5 @@ with Popen(cmd, shell=True, stdout=PIPE, bufsize=1, universal_newlines=True) as 
 		p.terminate()
 
 logger.error('Unexpected exit: ' + str(p))
-logger.error('Traceback: ' + traceback.print_exc())
+logger.error('Traceback: ' + str(traceback.print_exc()))
 p.terminate()
