@@ -14,6 +14,16 @@ humidity_digits = 0
 wind_speed_digits = 0
 enable_dual_band_mode = True
 
+# Configure Logger
+logging.basicConfig(level=logging.INFO, format="%(asctime)s:%(levelname)s:%(message)s")
+logger = logging.getLogger(__name__)
+# Debug File Log
+file = logging.FileHandler("debug_acurite.log")
+file.setLevel(logging.INFO)
+fileformat = logging.Formatter("%(asctime)s:%(levelname)s:%(message)s")
+file.setFormatter(fileformat)
+logger.addHandler(file)
+
 # RTL 433 shell command; set to 915 MHz and json output
 # Hops every 25 seconds between 433.92 and 915 MHz for Acurite Weather Stations and Ambient Weather WH31
 #cmd = 'rtl_433 -F json -f 915000000'
@@ -181,16 +191,6 @@ def Parse_AmbientWeatherWH31(dd):
 		infot.wait_for_publish()
 		# Update last report time
 		AW_WH31_sample_ts[dd["channel"]] = time.time()
-
-# Configure Logger
-logging.basicConfig(level=logging.INFO, format="%(asctime)s:%(levelname)s:%(message)s")
-logger = logging.getLogger(__name__)
-# Debug File Log
-file = logging.FileHandler("debug_acurite.log")
-file.setLevel(logging.INFO)
-fileformat = logging.Formatter("%(asctime)s:%(levelname)s:%(message)s")
-file.setFormatter(fileformat)
-logger.addHandler(file)
 
 # Process Open of rtl_433 SDR
 with Popen(cmd, shell=True, stdout=PIPE, bufsize=1, universal_newlines=True) as p:
