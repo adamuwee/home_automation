@@ -34,7 +34,7 @@ if enable_dual_band_mode:
 	logger.info('Dual mode enabled')
 	cmd = 'rtl_433 -F json -f 915000000 -f 433920000 -H 25 -R 40 -R 113'
 
-print('Using rtL_433 command : ' + cmd)
+logger.info('Using rtL_433 command : ' + cmd)
 
 # MQTT Client
 flag_connected = False
@@ -54,7 +54,7 @@ try:
 	client.connect(openhab_host, mqtt_broker_port)
 	client.loop_start()
 except:
-	print('MQTT client connect failure')
+	logger.warning('MQTT client connect failure')
 	flag_connected = False
 
 now = time.time()
@@ -74,7 +74,7 @@ def Parse_AcuriteWeatherStation(dd):
 	# {"time" : "2021-03-11 10:31:14", "model" : "Acurite-5n1", "message_type" : 56, "id" : 719, "channel" : "C", "sequence_num" : 0, "battery_ok" : 1, "wind_avg_km_h" : 3.483, "temperature_F" : 67.300, "humidity" : 53, "mic" : "CHECKSUM"}
 	# {"time" : "2021-03-11 10:31:14", "model" : "Acurite-5n1", "message_type" : 56, "id" : 719, "channel" : "C", "sequence_num" : 1, "battery_ok" : 1, "wind_avg_km_h" : 3.483, "temperature_F" : 67.300, "humidity" : 53, "mic" : "CHECKSUM"}
 	# {"time" : "2021-03-11 10:31:14", "model" : "Acurite-5n1", "message_type" : 56, "id" : 719, "channel" : "C", "sequence_num" : 2, "battery_ok" : 1, "wind_avg_km_h" : 3.483, "temperature_F" : 67.300, "humidity" : 53, "mic" : "CHECKSUM"}
-	print('Acurite Parser Started!')
+	logger.info('Acurite Parser Started!')
 
 	# Check last timestamp and filter
 	last_report = AR_WeatherStation_sample_ts[dd["message_type"]]
@@ -84,7 +84,7 @@ def Parse_AcuriteWeatherStation(dd):
 		return
 	
 	if 'message_type' not in dd:
-		print('message_type key not found in Acurite Weather data')
+		logger.warning('message_type key not found in Acurite Weather data')
 		return
 
 	if dd["message_type"] == 56:
@@ -92,20 +92,20 @@ def Parse_AcuriteWeatherStation(dd):
 		# Temperature
 		temperature_F = round(float(dd["temperature_F"]), temperature_digits)
 		infot = client.publish(topic_channel + "temperature", round(temperature_F,1), qos=1, retain=False)
-		print(topic_channel + "temperature/" + str(temperature_F))
+		logger.info(topic_channel + "temperature/" + str(temperature_F))
 		infot.wait_for_publish()
 
 		# Humidity
 		humidity = round(float(dd["humidity"]), humidity_digits)
 		infot = client.publish(topic_channel + "humidity", round(humidity,1), qos=1, retain=False)
-		print(topic_channel + "humidity/" + str(humidity))
+		logger.info(topic_channel + "humidity/" + str(humidity))
 		infot.wait_for_publish()
 
 		# Wind
 		wind = dd["wind_avg_km_h"]
 		wind = round(wind * 0.6213712, wind_speed_digits)	# Convert kmh to mph
 		infot = client.publish(topic_channel + 'wind_avg', wind, qos=1, retain=False)
-		print(topic_channel + "wind_avg/" + str(wind))
+		logger.info(topic_channel + "wind_avg/" + str(wind))
 		infot.wait_for_publish()
 		
 		# Update last report time
@@ -117,19 +117,19 @@ def Parse_AcuriteWeatherStation(dd):
 		wind = dd["wind_avg_km_h"]
 		wind = round(wind * 0.6213712, wind_speed_digits)	# Convert kmh to mph
 		infot = client.publish(topic_channel + "wind_avg", wind, qos=1, retain=False)
-		print(topic_channel + "wind_avg/" + str(wind))
+		logger.info(topic_channel + "wind_avg/" + str(wind))
 		infot.wait_for_publish()
 
 		# Wind Direction (deg)
 		wind_dir = dd["wind_dir_deg"]
 		infot = client.publish(topic_channel + "wind_dir", wind_dir, qos=1, retain=False)
-		print(topic_channel + "wind_dir/" + str(wind_dir))
+		logger.info(topic_channel + "wind_dir/" + str(wind_dir))
 		infot.wait_for_publish()
 
 		# Rain (inches)
 		rain_in = dd["rain_in"]
 		infot = client.publish(topic_channel + "rain_total", rain_in, qos=1, retain=False)
-		print(topic_channel + "rain_total/" + str(rain_in))
+		logger.info(topic_channel + "rain_total/" + str(rain_in))
 		infot.wait_for_publish()
 		
 		# Update last report time
@@ -164,10 +164,10 @@ def Parse_AmbientWeatherWH31(dd):
 	#	 'mic': 'CRC'}
 
 	# Check if the channel recently transmitted
-	print('Ambient Weather Parser Started!')
+	logger.info('Ambient Weather Parser Started!')
 
 	if 'channel' not in dd:
-		print('channel key not found in WH31 data')
+		logger.warning('channel key not found in WH31 data')
 		return
 
 	last_report = AW_WH31_sample_ts[dd["channel"]]
@@ -177,17 +177,17 @@ def Parse_AmbientWeatherWH31(dd):
 		# Temperature
 		temperature_F = round(float(dd["temperature_C"]) * 1.8 + 32.0, temperature_digits)
 		infot = client.publish(topic_channel + "temperature", round(temperature_F,1), qos=1, retain=False)
-		print(topic_channel + "temperature/" + str(temperature_F))
+		logger.info(topic_channel + "temperature/" + str(temperature_F))
 		infot.wait_for_publish()
 		# Humidity
 		humidity = round(float(dd["humidity"]), humidity_digits)
 		infot = client.publish(topic_channel + "humidity", round(humidity,1), qos=1, retain=False)
-		print(topic_channel + "humidity/" + str(humidity))
+		logger.info(topic_channel + "humidity/" + str(humidity))
 		infot.wait_for_publish()
 		# Battery
 		battery = dd["battery_ok"]
 		infot = client.publish(topic_channel + "battery", battery, qos=1, retain=False)
-		print(topic_channel + "battery/" + str(battery))
+		logger.info(topic_channel + "battery/" + str(battery))
 		infot.wait_for_publish()
 		# Update last report time
 		AW_WH31_sample_ts[dd["channel"]] = time.time()
@@ -207,7 +207,7 @@ with Popen(cmd, shell=True, stdout=PIPE, bufsize=1, universal_newlines=True) as 
 			data_dict = json.loads(line)
 
 			# Print / debug
-			print(data_dict)
+			logger.info(data_dict)
 			key = 'model'
 			if key in data_dict:
 				# Check Model Type
