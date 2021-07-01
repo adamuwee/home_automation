@@ -146,7 +146,7 @@ class oh_sql_client():
         colName = 'time'
         startDate = day
         startDate = datetime(day.year, day.month, day.day, 0, 0, 0)
-        endDate = datetime(day.year, day.month, day.day +1 , 0, 0, 0)
+        endDate = datetime(day.year, day.month, day.day, 23, 59, 59)
         query = f"SELECT * FROM {oh_table_name} WHERE time >= '{startDate}' AND time < '{endDate}'";
         # Connect to OH Database
         cursor = self._connect();
@@ -166,7 +166,7 @@ class oh_sql_client():
         colName = 'time'
         startDate = day
         startDate = datetime(day.year, day.month, day.day, 0, 0, 0)
-        endDate = datetime(day.year, day.month, day.day +1 , 0, 0, 0)
+        endDate = datetime(day.year, day.month, day.day, 23, 59, 59)
         query = f"SELECT * FROM {oh_table_name} WHERE time >= '{startDate}' AND time < '{endDate}' LIMIT 1";
         # Connect to OH Database
         cursor = self._connect();
@@ -186,7 +186,11 @@ class oh_sql_client():
         colName = 'time'
         startDate = month
         startDate = datetime(month.year, month.month, 1, 0, 0, 0)
-        endDate = datetime(month.year, month.month+1, 1, 0, 0, 0)
+        if (month.month == 12):
+            # Change to the next year / January
+            endDate = datetime(month.year+1, 1, 1, 0, 0, 0)
+        else:
+            endDate = datetime(month.year, month.month+1, 1, 0, 0, 0)
         query = f"SELECT * FROM {oh_table_name} WHERE time >= '{startDate}' AND time < '{endDate}'";
         # Connect to OH Database
         cursor = self._connect();
@@ -206,7 +210,11 @@ class oh_sql_client():
         colName = 'time'
         startDate = month
         startDate = datetime(month.year, month.month, 1, 0, 0, 0)
-        endDate = datetime(month.year, month.month+1, 1, 0, 0, 0)
+         if (month.month == 12):
+            # Change to the next year / January
+            endDate = datetime(month.year+1, 1, 1, 0, 0, 0)
+        else:
+            endDate = datetime(month.year, month.month+1, 1, 0, 0, 0)
         query = f"SELECT * FROM {oh_table_name} WHERE time >= '{startDate}' AND time < '{endDate}' LIMIT 1";
         # Connect to OH Database
         cursor = self._connect();
