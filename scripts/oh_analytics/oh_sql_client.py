@@ -6,6 +6,7 @@ from typing import Any
 import mariadb
 import json
 from os.path import exists
+import os
 
 class oh_sql_client():
 
@@ -46,6 +47,7 @@ class oh_sql_client():
         # Read json conf
         try:
             with open(json_file_name, 'r') as json_conf_file:
+                self._logger.info(f'Reading {self._connection_conf}: {os.path.abspath(os.getcwd())}')
                 json_data = json_conf_file.read()
                 json_conf_file.close()
             json_obj = json.loads(json_data)
