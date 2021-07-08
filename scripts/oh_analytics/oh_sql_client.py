@@ -210,7 +210,7 @@ class oh_sql_client():
         colName = 'time'
         startDate = month
         startDate = datetime(month.year, month.month, 1, 0, 0, 0)
-         if (month.month == 12):
+        if (month.month == 12):
             # Change to the next year / January
             endDate = datetime(month.year+1, 1, 1, 0, 0, 0)
         else:

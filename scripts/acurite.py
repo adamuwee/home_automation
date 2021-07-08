@@ -12,7 +12,7 @@ mqtt_broker_port = 1883
 temperature_digits = 0
 humidity_digits = 0
 wind_speed_digits = 0
-enable_dual_band_mode = True
+enable_dual_band_mode = False
 
 # Configure Logger
 logging.basicConfig(level=logging.INFO, format="%(asctime)s:%(levelname)s:%(message)s")
@@ -28,11 +28,11 @@ logger.addHandler(file)
 # Hops every 25 seconds between 433.92 and 915 MHz for Acurite Weather Stations and Ambient Weather WH31
 #cmd = 'rtl_433 -F json -f 915000000'
 #cmd = 'rtl_433 -F json -f 915000000 -f 433920000 -H 25 -R 40 -R 113'
-cmd = 'rtl_433 -d 0 -F json -f 433920000'
+cmd = 'rtl_433 -d 1 -F json -f 433920000'
 
 if enable_dual_band_mode:
 	logger.info('Dual mode enabled')
-	cmd = 'rtl_433 -F json -f 915000000 -f 433920000 -H 25 -R 40 -R 113'
+	cmd = 'rtl_433 -d 1 -F json -f 915000000 -f 433920000 -H 25 -R 40 -R 113'
 
 logger.info('Using rtL_433 command : ' + cmd)
 
