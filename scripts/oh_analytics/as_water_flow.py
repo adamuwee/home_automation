@@ -32,7 +32,7 @@ class as_water_flow():
         pass
                 
     # Open Hab Globals
-    _water_flow_counter_uid = "MoxaMR451600DI_WaterMainsUsageGallons"
+    _water_flow_counter_uid = "WaterMainsScaled10xGals"
     _water_flow_daily_usage_uid = "WaterMainsDailyUsage"
     _water_flow_monthly_usage_uid = "WaterMainsMonthlyUsage"
     _LastTimeStamp = None
