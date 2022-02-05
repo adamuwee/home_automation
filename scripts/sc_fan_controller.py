@@ -5,10 +5,16 @@ import logging
 import paho.mqtt.client as mqtt
 
 # App Config
-pwm_pin = 32
+loop_period_seconds = 10
 pwm_freq = 10000
-top_sensor_i2c_addr = 0x44
-bot_senosr_i2c_addr = 0x45
+top_sensor_i2c_addr = 0x45
+bot_senosr_i2c_addr = 0x44
+
+# Pi Pin Config
+pwm_pin = 32
+tach1_pin = 15
+tach2_pin = 13
+tach3_pin = 11
 
 # App Constants
 openhab_host = "debian-openhab"
@@ -79,8 +85,27 @@ def read_sht31_temp_humidity(addr):
         bus.close()
         return (fTemp, humidity)
 
-def init_fan_pwm():
+tach_counts = {
+	tach1_pin: 0,
+	tach2_pin: 0,
+    tach3_pin: 0,
+}
+global last_tach_sample
+last_tach_sample = time.time()
+def count_tach_pulse(tach_channel):
+    tach_counts[tach_channel] += 1
+
+def init_pi_pins():
+    # Use BOARD mode
     GPIO.setmode(GPIO.BOARD)
+    # Tach Input Pins
+    GPIO.setup(tach1_pin, GPIO.IN)
+    GPIO.setup(tach2_pin, GPIO.IN)
+    GPIO.setup(tach3_pin, GPIO.IN)
+    GPIO.add_event_detect(tach1_pin, GPIO.FALLING, callback=count_tach_pulse)
+    GPIO.add_event_detect(tach2_pin, GPIO.FALLING, callback=count_tach_pulse)
+    GPIO.add_event_detect(tach3_pin, GPIO.FALLING, callback=count_tach_pulse)
+    # PWM Output Pin
     GPIO.setup(pwm_pin, GPIO.OUT)
     GPIO.output(pwm_pin, GPIO.LOW)
     global pwm
@@ -114,9 +139,18 @@ def monitor_temp_update_fans():
     set_fan_pwm(duty_cycle_set_point)
 
     # Measure fan tach / rpm
-    tach1 = 1
-    tach2 = 2
-    tach3 = 3
+    global last_tach_sample
+    tach_counts_snap = dict(tach_counts)
+    for tc in tach_counts:
+        tach_counts[tc] = 0
+    delta = time.time() - last_tach_sample
+    last_tach_sample = time.time()
+    tach1 = tach_counts_snap[tach1_pin] / delta * 60.0
+    tach2 = tach_counts_snap[tach2_pin] / delta * 60.0
+    tach3 = tach_counts_snap[tach3_pin] / delta * 60.0
+    print(f'Fan #1: Count = {tach_counts_snap[tach1_pin]} \ttach = {tach1:.2f} rpm')
+    print(f'Fan #2: Count = {tach_counts_snap[tach2_pin]} \ttach = {tach2:.2f} rpm')
+    print(f'Fan #3: Count = {tach_counts_snap[tach3_pin]} \ttach = {tach3:.2f} rpm')
     
     # Measurement Dict
     measurements = dict()
@@ -130,10 +164,12 @@ def monitor_temp_update_fans():
     measurements[fan_3_tach] = tach3
 
     # Publish temperature and humidity values to OpenHab
+    print('\n=========== OpenHab MQTT Publish Start ===========')
     for uid, value in measurements.items():
         infot = client.publish(uid, round(value, 1), qos=1, retain=False)
-        print(f"{uid}: {value}")
+        print(f"{uid.ljust(32)}: {value:.2f}")
         infot.wait_for_publish()
+    print('=========== OpenHab MQTT Publish end ===========\n')
 
 def main():
     # Configure Logger
@@ -150,8 +186,8 @@ def main():
     cric_file.setLevel(logging.CRITICAL)
     cric_file.setFormatter(fileformat)
     logger.addHandler(cric_file)
-    # Configure Fan PWM output
-    init_fan_pwm()
+    # Initialize RaspPi I/O pins
+    init_pi_pins()
     # Infinite loop of reporting temperature and setting fan speed based on temperature
     while True:
         # Check MQTT Client Connection
@@ -162,7 +198,7 @@ def main():
             logger.info(f'MQTT Client Connected: {client}')
 
         monitor_temp_update_fans()
-        time.sleep(1)
+        time.sleep(loop_period_seconds)
 
 if __name__ == "__main__":
     main()
