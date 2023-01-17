@@ -224,7 +224,7 @@ if __name__=="__main__":
         # Get Battery Charge
         print("---------------------------------------------------------------------------------------")
         charge = enphase.get_battery_charge()
-        enphase._debug_print("battery charge = " + str(charge) + "%")
+        enphase._debug_print("Battery charge = " + str(charge) + "%")
         # Post to OpenHab
         client.publish_value("BatteryCharge", charge)
         # Pause
