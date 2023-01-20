@@ -97,9 +97,9 @@ class oh_sql_client():
 
     def get_item_list(self) -> dict:
         # Connect to OH Database
-        cursor = self._connect();
+        cursor = self._connect()
         if cursor == None:
-            return None;
+            return None
         # Build SQL Query    
         query = "SELECT * FROM items;"
         result = None
@@ -120,11 +120,11 @@ class oh_sql_client():
     def get_last_value(self, oh_item_name) -> dict:
         oh_table_name = self._get_table_name_from_OH_name(oh_item_name) # In the format itemXXXX
         colName = 'time'
-        query = f'SELECT * FROM {oh_table_name} ORDER BY {colName} DESC LIMIT 1';
+        query = f'SELECT * FROM {oh_table_name} ORDER BY {colName} DESC LIMIT 1'
         # Connect to OH Database
-        cursor = self._connect();
+        cursor = self._connect()
         if cursor == None:
-            return None;
+            return None
         # Build SQL Query  
         cursor.execute(query)
         return cursor.fetchone()
@@ -133,11 +133,11 @@ class oh_sql_client():
     def get_row_count(self, oh_item_name) -> int:
         oh_table_name = self._get_table_name_from_OH_name(oh_item_name) # In the format itemXXXX
         colName = 'time'
-        query = f'SELECT COUNT(*) FROM {oh_table_name}';
+        query = f'SELECT COUNT(*) FROM {oh_table_name}'
         # Connect to OH Database
-        cursor = self._connect();
+        cursor = self._connect()
         if cursor == None:
-            return None;
+            return None
         # Execute SQL Query  
         cursor.execute(query)
         return cursor.fetchone()
@@ -151,9 +151,9 @@ class oh_sql_client():
         endDate = datetime(day.year, day.month, day.day, 23, 59, 59)
         query = f"SELECT * FROM {oh_table_name} WHERE time >= '{startDate}' AND time < '{endDate}'";
         # Connect to OH Database
-        cursor = self._connect();
+        cursor = self._connect()
         if cursor == None:
-            return None;
+            return None
         # Execute SQL Query  
         cursor.execute(query)
         # Building dict < item #, item name >
@@ -171,9 +171,9 @@ class oh_sql_client():
         endDate = datetime(day.year, day.month, day.day, 23, 59, 59)
         query = f"SELECT * FROM {oh_table_name} WHERE time >= '{startDate}' AND time < '{endDate}' LIMIT 1";
         # Connect to OH Database
-        cursor = self._connect();
+        cursor = self._connect()
         if cursor == None:
-            return None;
+            return None
         # Execute SQL Query  
         cursor.execute(query)
         # Building dict < item #, item name >
@@ -195,9 +195,9 @@ class oh_sql_client():
             endDate = datetime(month.year, month.month+1, 1, 0, 0, 0)
         query = f"SELECT * FROM {oh_table_name} WHERE time >= '{startDate}' AND time < '{endDate}'";
         # Connect to OH Database
-        cursor = self._connect();
+        cursor = self._connect()
         if cursor == None:
-            return None;
+            return None
         # Execute SQL Query  
         cursor.execute(query)
         # Building dict < item #, item name >
@@ -219,9 +219,9 @@ class oh_sql_client():
             endDate = datetime(month.year, month.month+1, 1, 0, 0, 0)
         query = f"SELECT * FROM {oh_table_name} WHERE time >= '{startDate}' AND time < '{endDate}' LIMIT 1";
         # Connect to OH Database
-        cursor = self._connect();
+        cursor = self._connect()
         if cursor == None:
-            return None;
+            return None
         # Execute SQL Query  
         cursor.execute(query)
         # Building dict < item #, item name >
@@ -233,11 +233,11 @@ class oh_sql_client():
     def get_all_values(self, oh_item_name) -> dict:
         # Build SQL Query
         oh_table_name = self._get_table_name_from_OH_name(oh_item_name) # In the format itemXXXX
-        query = f"SELECT * FROM {oh_table_name}";
+        query = f"SELECT * FROM {oh_table_name}"
         # Connect to OH Database
-        cursor = self._connect();
+        cursor = self._connect()
         if cursor == None:
-            return None;
+            return None
         # Execute SQL Query  
         cursor.execute(query)
         # Building dict < item #, item name >
