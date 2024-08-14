@@ -1,0 +1,136 @@
+<table style="width:90%; margin: auto">
+  <tr style="background:black; padding: 10px">
+    <th class="text-left">Environment</th>
+    <th class="text-right"></th> 
+    <th class="text-right"></th>
+  </tr>
+  <tr>
+    <td class="text-right">Garage</td>
+    <td class="text-right"><strong>{{itemValue('Environment_Monitoring_WH31_Sensor_1_Temperature')}}</strong>
+        <small style="font-size:8pt">°F</small></td>
+    <td class="text-right">{{itemValue('Environment_Monitoring_WH31_Sensor_1__Humidity')}}
+        <small style="font-size:8pt">%</small></td>
+  </tr>
+
+  <tr>
+    <td class="text-right">Family Room</td>
+    <td class="text-right"><strong>{{itemValue('Environment_Monitoring_WH31_Sensor_3_Temperature')}}</strong><small style="font-size:8pt">°F</small></td>
+    <td class="text-right">{{itemValue('Environment_Monitoring_WH31_Sensor_3_Humidity')}}<small style="font-size:8pt">%</small></td>
+  </tr>
+
+  <tr>
+    <td class="text-right">Guest Room</td>
+    <td class="text-right"><strong>{{itemValue('Environment_Monitoring_WH31_Sensor_4_Temperature')}}</strong><small style="font-size:8pt">°F</small></td>
+    <td class="text-right">{{itemValue('Environment_Monitoring_WH31_Sensor_4_Humidity')}}<small style="font-size:8pt">%</small></td>
+  </tr>
+
+  <tr>
+    <td class="text-right">Ana's Room</td>
+    <td class="text-right"><strong>{{itemValue('EcobeeSensorAnasRoom_SensorTemperature')}}</strong>
+    <td class="text-right">-</td>
+  </tr>
+  <tr>
+    <td class="text-right">Master Bedroom</td>
+    <td class="text-right"><strong>{{itemValue('EcobeeSensorMasterBedroom_SensorTemperature')}}</strong>
+    <td class="text-right">-</td>
+  </tr>
+  
+  <tr>
+    <td class="text-right">Bonus Room</td>
+    <td class="text-right"><strong>{{itemValue('Environment_Monitoring_WH31_Sensor_6_Temperature')}}</strong><small style="font-size:8pt">°F</small></td>
+    <td class="text-right">{{itemValue('Environment_Monitoring_WH31_Sensor_6_Humidity')}}<small style="font-size:8pt">%</small></td>
+  </tr>
+  
+  <tr>
+    <td class="text-right">Server Closet</td>
+    <td class="text-right"><strong>{{itemValue('SC_Temperature')}}</strong>
+        <small style="font-size:8pt">°F</small></td>
+    <td class="text-right">{{itemValue('SC_Humidity').substring(0,2)}}
+        <small style="font-size:8pt">%</small></td>
+  </tr>
+
+  <tr>
+    <td class="text-right">Crawl Space</td>
+    <td class="text-right"><strong>{{itemValue('Environment_Monitoring_Crawl_Space_Temperature')}}</strong>
+        <small style="font-size:8pt">°F</small></td>
+    <td class="text-right">{{itemValue('Environment_Monitoring_Crawl_Space_Humidity')}}
+        <small style="font-size:8pt">%</small></td>
+  </tr>
+  
+  <tr>
+    <td class="text-right">Attic Entrance</td>
+    <td class="text-right"><strong>{{itemValue('Environment_Monitoring_WH31_Sensor_7_Temperature')}}</strong><small style="font-size:8pt">°F</small></td>
+    <td class="text-right">{{itemValue('Environment_Monitoring_WH31_Sensor_7_Humidity')}}<small style="font-size:8pt">%</small></td>
+  </tr>
+
+  <tr>
+    <td class="text-right">Attic Bonus Room</td>
+    <td class="text-right"><strong>{{itemValue('Environment_Monitoring_WH31_Sensor_8_Temperature')}}</strong><small style="font-size:8pt">°F</small></td>
+    <td class="text-right">{{itemValue('Environment_Monitoring_WH31_Sensor_8_Humidity')}}<small style="font-size:8pt">%</small></td>
+  </tr>
+    
+    <tr>
+    <td class="text-right">Rain Barrel</td>
+    <td class="text-right"><strong>{{itemValue('Rain_Barrel_Depth_Sensor')}}</strong><small style="font-size:8pt">gal</small></td>
+    <td class="text-right"> <small style="font-size:8pt"></small></td>
+  </tr>  
+    
+
+  <tr style="background:black">
+    <td class="text-left">Security</td>
+    <td class="text-right"><small style="font-size:8pt"></small></td>
+    <td class="text-right"><small style="font-size:8pt"></small></td>
+  </tr>
+ 
+  <tr>
+    <td class="text-right">Ext Garage Door</td>
+    <td class="text-right" ng-style="{ color: itemValue('MoxaMR451600DI_ExternalGarageDoorDownSensor')=='CLOSED'?'grey':'red'}">
+        <strong>{{itemValue('MoxaMR451600DI_ExternalGarageDoorDownSensor')}}</strong>
+        <small style="font-size:8pt"></small></td>
+    <td class="text-right"><small style="font-size:8pt"></small></td>
+  </tr>
+  
+  <tr>
+    <td class="text-right">Front Door</td>
+    <td class="text-right" ng-style="{ color: itemValue('FrontDoor')=='CLOSED'?'grey':'red'}">
+        <strong>{{itemValue('FrontDoor')}}</strong>
+        <small style="font-size:8pt"></small></td>
+    <td class="text-right"><small style="font-size:8pt"></small></td>
+  </tr>
+  <tr>
+    <td class="text-right">Deck Door</td>
+    <td class="text-right" ng-style="{ color: itemValue('DeckDoor')=='CLOSED'?'grey':'red'}">
+        <strong>{{itemValue('DeckDoor')}}</strong>
+        <small style="font-size:8pt"></small></td>
+    <td class="text-right"><small style="font-size:8pt"></small></td>
+  </tr>
+  <tr>
+    <td class="text-right">Garage Door</td>
+    <td class="text-right" ng-style="{ color: itemValue('GarageDoor')=='CLOSED'?'grey':'red'}">
+        <strong>{{itemValue('GarageDoor')}}</strong>
+        <small style="font-size:8pt"></small></td>
+    <td class="text-right"><small style="font-size:8pt"></small></td>
+  </tr>
+  <tr>
+    <td class="text-right">Front Hall</td>
+    <td class="text-right" ng-style="{ color: itemValue('FrontHallMotionDetection')=='CLOSED'?'grey':'red'}">
+        <strong>{{itemValue('FrontHallMotionDetection')}}</strong>
+        <small style="font-size:8pt"></small></td>
+    <td class="text-right"><small style="font-size:8pt"></small></td>
+  </tr>
+  <tr>
+    <td class="text-right">Ana's Bedroom</td>
+    <td class="text-right" ng-style="{ color: itemValue('EcobeeSensorAnasRoom_SensorOccupancy')=='OFF'?'grey':'red'}">
+        <strong>{{itemValue('EcobeeSensorAnasRoom_SensorOccupancy')}}</strong>
+        <small style="font-size:8pt"></small></td>
+    <td class="text-right"><small style="font-size:8pt"></small></td>
+  </tr>
+  <tr>
+    <td class="text-right">Master Bedroom</td>
+    <td class="text-right" ng-style="{ color: itemValue('EcobeeSensorMasterBedroom_SensorOccupancy')=='OFF'?'grey':'red'}">
+        <strong>{{itemValue('EcobeeSensorMasterBedroom_SensorOccupancy')}}</strong>
+        <small style="font-size:8pt"></small></td>
+    <td class="text-right"><small style="font-size:8pt"></small></td>
+  </tr>
+
+</table>
