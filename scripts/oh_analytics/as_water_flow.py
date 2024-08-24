@@ -5,14 +5,15 @@ import math
 from datetime import datetime
 import logging
 import sys
-import oh_sql_client
+#import oh_sql_client
+import oh_influxdb_client
 from os.path import exists
 
 class as_water_flow(): 
 
     # Globals
     _logger = None
-    _oh_client = None
+    _oh_db_client = None
     _todays_absolute_value = math.inf
     _months_absolute_value = math.inf
     _todays_usage = 0
@@ -25,7 +26,8 @@ class as_water_flow():
         self._logger = logger
         self._logger.info('Water Flow Analytics object init')
         self._init_analytics_conf()
-        self._oh_client = oh_sql_client.oh_sql_client(None)
+        #self._oh_db_client = oh_sql_client.oh_sql_client(None)
+        self._oh_db_client = oh_influxdb_client.oh_influxdb_client(None)
         self._get_first_counter_reading_for_day()
         self._get_first_counter_reading_for_month()
         self._get_last_value_and_init()
@@ -75,7 +77,7 @@ class as_water_flow():
 
     # Get the last value and update daily and monthly on init
     def _get_last_value_and_init(self):
-        last_value = self._oh_client.get_last_value(self._water_flow_counter_uid)[1]
+        last_value = self._oh_db_client.get_last_value(self._water_flow_counter_uid)[1]
         self.process_new_data(last_value)
         self.report_to_OH()
 
@@ -83,11 +85,11 @@ class as_water_flow():
     def _get_first_counter_reading_for_day(self):
         # Get measurements for the day and assess min / max
         self._logger.info(f"Retrieving today's water flow counter value")
-        first_value_today = self._oh_client.get_first_value_for_day(self._water_flow_counter_uid, datetime.now())
+        first_value_today = self._oh_db_client.get_first_value_for_day(self._water_flow_counter_uid, datetime.now())
         # There may not be an updated value for the day if the counter has not changed.
         # In this case, just get the last value; this is okay as it means there's been no flow since the day change. 
         if len(first_value_today) == 0:
-            last_value = self._oh_client.get_last_value(self._water_flow_counter_uid)
+            last_value = self._oh_db_client.get_last_value(self._water_flow_counter_uid)
             self._todays_absolute_value = last_value[1]
         else:
             self._todays_absolute_value = next(iter(first_value_today.values()))
@@ -96,11 +98,11 @@ class as_water_flow():
     def _get_first_counter_reading_for_month(self):
         # Get the first counter reading for the month
         self._logger.info(f"Retrieving this month's water flow counter value")
-        first_value_month = self._oh_client.get_first_value_for_month(self._water_flow_counter_uid, datetime.now())
+        first_value_month = self._oh_db_client.get_first_value_for_month(self._water_flow_counter_uid, datetime.now())
         # There may not be an updated value for the day if the counter has not changed.
         # In this case, just get the last value; this is okay as it means there's been no flow since the day change. 
         if len(first_value_month) == 0:
-            last_value = self._oh_client.get_last_value(self._water_flow_counter_uid)
+            last_value = self._oh_db_client.get_last_value(self._water_flow_counter_uid)
             self._months_absolute_value = last_value[1]
         else:
             self._months_absolute_value = next(iter(first_value_month.values()))
@@ -172,7 +174,6 @@ class as_water_flow():
         request = requests.put(url,  auth=(self._analytics_conf['oh_token'], ''), data=str(self._todays_usage), headers={ "Content-Type": "text/plain" })
         self._logger.info(f"Todays Usage:{self._todays_usage}\tStatus Code: {request.status_code}")
         # Monthly Water Usage
-        daily_min_item_uid = "WS_Temperature_DailyMin"
         url = f"http://{self._analytics_conf['host']}:{self._analytics_conf['port']}/rest/items/{self._water_flow_monthly_usage_uid}/state"
         request = requests.put(url,  auth=(self._analytics_conf['oh_token'], ''), data=str(self._months_usage), headers={ "Content-Type": "text/plain" })
         self._logger.info(f"Todays Usage:{self._months_usage}\tStatus Code: {request.status_code}")
