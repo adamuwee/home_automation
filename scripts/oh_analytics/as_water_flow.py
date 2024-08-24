@@ -2,7 +2,7 @@ import json
 import requests
 import re
 import math
-from datetime import datetime, date, time
+from datetime import datetime
 import logging
 import sys
 import oh_sql_client
@@ -32,9 +32,9 @@ class as_water_flow():
         pass
                 
     # Open Hab Globals
-    _water_flow_counter_uid = "WaterMainsScaled10xGals"
-    _water_flow_daily_usage_uid = "WaterMainsDailyUsage"
-    _water_flow_monthly_usage_uid = "WaterMainsMonthlyUsage"
+    _water_flow_counter_uid = "Water_Mains_Water_Mains_Count_Scale_Gallons"
+    _water_flow_daily_usage_uid = "Water_Mains_Water_Main_Daily_Usage_gal"
+    _water_flow_monthly_usage_uid = "Water_Mains_Water_Main_Monthly_Usage_gal"
     _LastTimeStamp = None
 
     # Open Hab Globals

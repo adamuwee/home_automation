@@ -3,6 +3,7 @@ scripts/oh_analytics/__pycache__/oh_sql_client.cpython-38.pyc
 .vscode/launch.json
 *.csv
 *.log
+venv
 venv/pyvenv.cfg
 venv/Lib/site-packages/easy_install.py
 venv/Lib/site-packages/__pycache__/easy_install.cpython-38.pyc
