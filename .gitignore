@@ -1,6 +1,8 @@
 sql_conf.json
 scripts/oh_analytics/__pycache__/oh_sql_client.cpython-38.pyc
 .vscode/launch.json
+influxdb_conf.json
+oh_analytics_conf.json
 *.csv
 *.log
 venv
