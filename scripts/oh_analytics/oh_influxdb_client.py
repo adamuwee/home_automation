@@ -102,14 +102,21 @@ class oh_influxdb_client():
     # Get the list of items from the OpenHab Database
     # < --- INCOMPLETE - NEEDS TO BE IMPLEMENTED --- >
     def get_item_list(self) -> dict:
-        return None
-
-    # < --- INCOMPLETE - NEEDS TO BE IMPLEMENTED --- >
-    def _get_table_name_from_OH_name(self, oh_item_name) -> str:
-        item_list = self.get_item_list()
-        item_table_index = list(item_list.keys())[list(item_list.values()).index(oh_item_name)]
-        oh_table_name = f'item{item_table_index:04}'
-        return oh_table_name
+        # Get the last value over the last 30 days
+        query = f'''
+        from(bucket: "{self._connection_conf['bucket']}")
+        |> range(start: -1y)
+        |> keep(columns: ["_measurement"])
+        |> distinct(column: "_measurement")
+        '''
+        result = self._basic_query(query)
+        
+        # Process the result
+        if result and len(result) > 0 and len(result[0].records) > 0:
+            records = [record.values for table in result for record in table.records]
+            return records
+        else:
+            return None
 
     # Provides the basic query interface to the InfluxDB Server
     def _basic_query(self, query) -> dict:
@@ -285,8 +292,8 @@ def main():
     logger.addHandler(cric_file)
     # Create OH3 SQL Client and test functions
     osc = oh_influxdb_client(logger)
-    #items_list = osc.get_item_list()
-    #logger.info(f'TEST #1 - OH3 Items List: {len(items_list)} items')
+    items_list = osc.get_item_list()
+    logger.info(f'TEST #1 - OH3 Items List: {len(items_list)} items')
     logger.info(f'TEST #2 - Get Last Value of Water_Mains_Water_Mains_Count_Scale_Gallons: ' + str(osc.get_last_value('Water_Mains_Water_Mains_Count_Scale_Gallons')))
     logger.info(f'TEST #3 - Get Row Count of Water_Mains_Water_Mains_Count_Scale_Gallons: ' + str(osc.get_row_count('Water_Mains_Water_Mains_Count_Scale_Gallons')))
     logger.info(f'TEST #4 - Get Measurements of Water_Mains_Water_Mains_Count_Scale_Gallons for a given day: ' + str(len(osc.get_values_for_day('Water_Mains_Water_Mains_Count_Scale_Gallons', datetime.now()))) + ' measurements')
