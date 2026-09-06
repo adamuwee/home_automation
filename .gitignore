@@ -3,6 +3,7 @@ scripts/oh_analytics/__pycache__/oh_sql_client.cpython-38.pyc
 .vscode/launch.json
 influxdb_conf.json
 oh_analytics_conf.json
+.env
 *.csv
 *.log
 venv

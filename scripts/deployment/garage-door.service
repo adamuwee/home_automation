@@ -1,0 +1,19 @@
+[Unit]
+Description=Garage door Modbus monitor
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=garage-door
+Group=garage-door
+WorkingDirectory=/opt/home_automation/scripts/oh_analytics
+EnvironmentFile=/etc/garage-door/garage-door.env
+ExecStart=/usr/bin/python3 /opt/home_automation/scripts/oh_analytics/garage_door.py
+Restart=on-failure
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

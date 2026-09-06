@@ -80,3 +80,24 @@ for line in r.iter_lines():
 
 Import requests
 WH31_AtticEntrance_Temperature
+
+Garage Door Monitor
+-------------------
+
+`garage_door.py` is a Linux service that reads the ioThinx 45MR-1600-0
+`diStatusAll` Modbus input register, subscribes to the outside-wind MQTT topic,
+and emits OTel log alerts to the configured OTLP endpoint. It exposes
+`GET /health` with a JSON `status` of `running`, `degraded`, or `error`.
+
+Copy `scripts/oh_analytics/.env.example` to a protected deployment location,
+such as `/etc/garage-door/garage-door.env`, and set `MODBUS_HOST`. Confirm
+`MODBUS_INPUT_REGISTER_ADDRESS` while observing a known door state: Moxa
+documentation address `21504` may need a one-address adjustment because
+Pymodbus reads protocol offsets. Channel 6 is ON when the door is closed and
+OFF when it is open.
+
+Install dependencies with `python3 -m pip install -r requirements.txt`. Copy
+`garage-door.service` to `/etc/systemd/system/`, adjust its paths and service
+account for the host, then run `systemctl daemon-reload` and
+`systemctl enable --now garage-door`. Check the process with
+`curl http://127.0.0.1:8088/health`.
